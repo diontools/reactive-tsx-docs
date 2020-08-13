@@ -1,0 +1,12 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#editor1, #editor2 {
+    height: 100%;
+    width: 50%;
+    overflow: unset;
+    display: inline-block;
+}

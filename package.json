@@ -1,0 +1,37 @@
+{
+  "name": "reactive-tsx-docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diontools/reactive-tsx-docs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diontools/reactive-tsx-docs/issues"
+  },
+  "homepage": "https://github.com/diontools/reactive-tsx-docs#readme",
+  "dependencies": {
+    "css-loader": "^4.2.1",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.9.0",
+    "normalize.css": "^8.0.1",
+    "raw-loader": "^4.0.1",
+    "reactive-tsx": "0.0.28",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^8.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
