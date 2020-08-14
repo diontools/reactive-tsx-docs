@@ -1,4 +1,4 @@
-import { Component, run } from 'reactive-tsx'
+import { Component, run, reactive } from 'reactive-tsx'
 import * as monaco from 'monaco-editor'
 import reactiveTsxTransformer from 'reactive-tsx/lib/transformer'
 import * as ts from 'typescript'
@@ -9,19 +9,28 @@ import libs from '../libs-loader!'
 console.log(libs)
 
 const App: Component = () => {
-    return <div>
+    return <div id="container">
         <div id="editor1" />
-        <div id="editor2" />
-        
+        <div id="right-pane">
+            <div id="editor2" />
+            <iframe id="result" />
+        </div>
     </div>
 }
 
 run(document.body, App, {})
 
-const source = `import { Component, run } from 'reactive-tsx'
+const source = `import { Component, run, reactive } from 'reactive-tsx/lib/mono'
 
 const App: Component = () => {
-    return <h1>hello!</h1>
+    const count = reactive(0)
+    
+    return <div>
+        <h1>hello!</h1>
+        count: {count.value}
+        <button onclick={() => count.value++}>+1</button>
+        <button onclick={() => count.value--}>-1</button>
+    </div>
 }
 
 run(document.body, App, {})
@@ -46,10 +55,6 @@ for (const path in libs) {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(libs[path]!, path)
     }
 }
-// monaco.languages.typescript.typescriptDefaults.addExtraLib(reactiveTsx, 'node_modules/reactive-tsx/lib/reactive-tsx.d.ts')
-// monaco.languages.typescript.typescriptDefaults.addExtraLib(reactiveTsxMono, 'node_modules/reactive-tsx/lib/mono.d.ts')
-// monaco.languages.typescript.typescriptDefaults.addExtraLib(globalDTS, 'node_modules/reactive-tsx/types/global.d.ts')
-// monaco.languages.typescript.typescriptDefaults.addExtraLib("export declare function test()", 'node_modules/export/index.d.ts')
 
 const modelUri1 = monaco.Uri.from({ scheme: 'ts', path: 'index.tsx' })
 const model1 = monaco.editor.createModel(source, 'typescript', modelUri1)
@@ -59,10 +64,12 @@ const model2 = monaco.editor.createModel('', 'javascript', modelUri2)
 
 const codeEditor1 = monaco.editor.create(document.getElementById('editor1')!, {
     model: model1,
+    automaticLayout: true,
 })
 
 monaco.editor.create(document.getElementById('editor2')!, {
     model: model2,
+    automaticLayout: true,
     readOnly: true,
 });
 
@@ -114,6 +121,9 @@ const host: ts.CompilerHost = {
     getNewLine() { return '\n' },
 }
 
+const resultFrame = document.getElementById('result') as HTMLIFrameElement
+if (!resultFrame) throw 'result is undefined.'
+
 const updateResult = () => {
     try {
         const program = ts.createProgram([sourceFileName], {
@@ -132,8 +142,16 @@ const updateResult = () => {
         const message = emitResult.diagnostics.map(d => d.messageText).join('\n')
 
         model2.setValue(message.length > 0 ? message : transpiledCode)
+        resultFrame.contentWindow!.location.reload()
+        resultFrame.onload = () => {
+            const doc = resultFrame.contentDocument || resultFrame.contentWindow?.document
+            if (!doc) throw 'result frame document is undefined.'
+            doc.write(`<html><body><script type="text/javascript">(function runner(){${transpiledCode}})()</script></body></html>`)
+            doc.close()
+        }
     } catch (e) {
         model2.setValue(JSON.stringify(e))
+        resultFrame.contentWindow?.location.reload()
     }
 }
 

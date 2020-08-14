@@ -1,12 +1,36 @@
-html, body {
+html, body, #container {
     height: 100%;
     width: 100%;
+}
+
+#container {
+    display: flex;
     overflow: hidden;
 }
 
-#editor1, #editor2 {
-    height: 100%;
+#editor1 {
     width: 50%;
+    height: 100%;
+}
+
+#right-pane {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: solid 1px lightgray;
+}
+
+#editor2 {
+    height: 50%;
+}
+
+#result {
+    height: 50%;
+    border: none;
+    border-top: solid 1px lightgray;
+}
+
+#editor1, #editor2 {
     overflow: unset;
-    display: inline-block;
 }
