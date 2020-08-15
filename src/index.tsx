@@ -20,11 +20,21 @@ const App: Component = () => {
 
 run(document.body, App, {})
 
-const source = `import { Component, run, reactive } from 'reactive-tsx/lib/mono'
+function getSourceFromUrl() {
+    try {
+        const obj: unknown = JSON.parse(decodeURIComponent(location.hash.substr(1)))
+        if (typeof obj === 'object' && obj !== null && typeof (obj as any).source === 'string') {
+            return (obj as any).source as string
+        }
+    } catch {
+    }
+}
+
+const source = getSourceFromUrl() || `import { Component, run, reactive } from 'reactive-tsx/lib/mono'
 
 const App: Component = () => {
     const count = reactive(0)
-    
+
     return <div>
         <h1>hello!</h1>
         count: {count.value}
@@ -126,6 +136,9 @@ if (!resultFrame) throw 'result is undefined.'
 
 const updateResult = () => {
     try {
+        const json = JSON.stringify({ source: model1.getValue() })
+        location.hash = encodeURIComponent(json)
+
         const program = ts.createProgram([sourceFileName], {
             strict: true,
             target: ts.ScriptTarget.ES2015,
