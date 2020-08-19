@@ -36,7 +36,7 @@ function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement, result
         }
     }
 
-    const source = getSourceFromUrl() || `import { Component, run, reactive } from 'reactive-tsx/lib/mono'
+    const source = getSourceFromUrl() || `import { Component, run, reactive } from 'reactive-tsx/mono'
 
 const App: Component = () => {
     const count = reactive(0)
@@ -51,7 +51,7 @@ const App: Component = () => {
 
 run(document.body, App, {})
 `
-    
+
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         strict: true,
         target: monaco.languages.typescript.ScriptTarget.ES2015,
