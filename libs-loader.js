@@ -37,6 +37,7 @@ module.exports = function (content, map, meta) {
     collectFiles([
         { dir: path.join(baseDir, 'node_modules', 'reactive-tsx') },
         { dir: path.join(baseDir, 'node_modules', 'typescript', 'lib'), filter: /lib\.[\w\.]*\.d\.ts$/ },
+        { dir: path.join(baseDir, 'node_modules', 'csstype'), filter: /\.d\.ts$/ },
     ])
 
     return `export default ${JSON.stringify(files)}`
