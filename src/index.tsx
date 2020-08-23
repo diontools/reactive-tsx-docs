@@ -13,11 +13,18 @@ const App: Component = () => {
     let resultFrame: HTMLIFrameElement
 
     return <div id="container" onCreate={() => startApp(editor1Div, editor2Div, resultFrame)}>
-        <div id="editor1" onCreate={e => editor1Div = e} />
-        <div id="right-pane">
-            <div id="editor2" onCreate={e => editor2Div = e} />
-            <iframe id="result" onCreate={e => resultFrame = e} />
-        </div>
+        <header>
+            <div class="logo">&lt;R</div>
+            <div class="title">reactive-tsx Playground</div>
+            <a class="github-button" href="https://github.com/diontools/reactive-tsx" target="_blank">GitHub</a>
+        </header>
+        <main>
+            <div id="editor1" onCreate={e => editor1Div = e} />
+            <div id="right-pane">
+                <div id="editor2" onCreate={e => editor2Div = e} />
+                <iframe id="result" onCreate={e => resultFrame = e} />
+            </div>
+        </main>
     </div>
 }
 
