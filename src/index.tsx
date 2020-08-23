@@ -68,7 +68,7 @@ run(document.body, App, {})
     })
 
     for (const path in libs) {
-        if (path.endsWith('.d.ts') && path.indexOf('typescript') < 0) {
+        if (path.indexOf('typescript') < 0) {
             console.log('addExtraLib:', path)
             monaco.languages.typescript.typescriptDefaults.addExtraLib(libs[path]!, path)
         }
