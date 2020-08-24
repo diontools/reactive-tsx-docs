@@ -7,6 +7,8 @@ import './style.css'
 
 import libs from '../libs-loader!'
 
+const resultSourceDoc = reactive('')
+
 const App: Component = () => {
     let editor1Div: HTMLDivElement
     let editor2Div: HTMLDivElement
@@ -22,7 +24,7 @@ const App: Component = () => {
             <div id="editor1" onCreate={e => editor1Div = e} />
             <div id="right-pane">
                 <div id="editor2" onCreate={e => editor2Div = e} />
-                <iframe id="result" onCreate={e => resultFrame = e} />
+                <iframe id="result" onCreate={e => resultFrame = e} sandbox="allow-scripts" srcDoc={resultSourceDoc.value} />
             </div>
         </main>
     </div>
@@ -158,16 +160,10 @@ run(document.body, App, {})
             const message = emitResult.diagnostics.map(d => d.messageText).join('\n')
 
             model2.setValue(message.length > 0 ? message : transpiledCode)
-            resultFrame.contentWindow!.location.reload()
-            resultFrame.onload = () => {
-                const doc = resultFrame.contentDocument || resultFrame.contentWindow?.document
-                if (!doc) throw 'result frame document is undefined.'
-                doc.write(`<html><body><script type="text/javascript">(function runner(){${transpiledCode}})()</script></body></html>`)
-                doc.close()
-            }
+            resultSourceDoc.value = `<!DOCTYPE html><html><body><script type="text/javascript">(function runner(){${transpiledCode}})()</script></body></html>`
         } catch (e) {
             model2.setValue(JSON.stringify(e))
-            resultFrame.contentWindow?.location.reload()
+            resultSourceDoc.value = ''
         }
     }
 
