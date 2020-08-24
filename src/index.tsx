@@ -1,4 +1,5 @@
 import { Component, run, reactive } from 'reactive-tsx'
+import * as pako from 'pako'
 import * as monaco from 'monaco-editor'
 import reactiveTsxTransformer from 'reactive-tsx/lib/transformer'
 import * as ts from 'typescript'
@@ -35,14 +36,38 @@ run(document.body, App, {})
 function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement, resultFrame: HTMLIFrameElement) {
     //console.log(libs)
 
+    const textDecoder = new TextDecoder()
+    const textEncoder = new TextEncoder()
+
     function getSourceFromUrl() {
         try {
-            const obj: unknown = JSON.parse(decodeURIComponent(location.hash.substr(1)))
+            let base64String =
+                location.hash.substr(1)
+                    .replace(/-/g, '+').replace(/_/g, '/')
+            switch (base64String.length % 4) {
+                case 2: base64String += '=='; break
+                case 3: base64String += '='; break
+            }
+            const compressedString = atob(base64String)
+            const compressedBytes = new Uint8Array(compressedString.length)
+            for (let i = 0; i < compressedBytes.length; i++) compressedBytes[i] = compressedString.charCodeAt(i)
+            const jsonBytes = pako.inflate(compressedBytes)
+            const json = textDecoder.decode(jsonBytes)
+            const obj: unknown = JSON.parse(json)
             if (typeof obj === 'object' && obj !== null && typeof (obj as any).source === 'string') {
                 return (obj as any).source as string
             }
         } catch {
         }
+    }
+
+    function setSourceToUrl(source: string) {
+        const json = JSON.stringify({ source })
+        const jsonBytes = textEncoder.encode(json)
+        const base64UrlString =
+            btoa(String.fromCharCode.apply(null, pako.deflate(jsonBytes) as any))
+                .replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/m, '')
+        location.hash = base64UrlString
     }
 
     const source = getSourceFromUrl() || `import { Component, run, reactive } from 'reactive-tsx/mono'
@@ -143,9 +168,8 @@ run(document.body, App, {})
 
     const updateResult = () => {
         try {
-            const json = JSON.stringify({ source: model1.getValue() })
-            location.hash = encodeURIComponent(json)
-
+            setSourceToUrl(model1.getValue())
+            
             const program = ts.createProgram([sourceFileName], {
                 strict: true,
                 target: ts.ScriptTarget.ES2015,
