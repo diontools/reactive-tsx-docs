@@ -38,6 +38,7 @@ function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement, result
 
     const textDecoder = new TextDecoder()
     const textEncoder = new TextEncoder()
+    let currentHash: string | undefined
 
     function getSourceFromUrl() {
         try {
@@ -67,8 +68,20 @@ function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement, result
         const base64UrlString =
             btoa(String.fromCharCode.apply(null, pako.deflate(jsonBytes) as any))
                 .replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/m, '')
+        currentHash = base64UrlString
         location.hash = base64UrlString
     }
+
+    window.addEventListener('hashchange', ev => {
+        ev.preventDefault()
+        console.log('hash changed', location.hash)
+        const hash = location.hash.substr(1)
+        if (currentHash !== hash) {
+            currentHash = hash
+            const source = getSourceFromUrl()
+            if (source) model1.setValue(source)
+        }
+    })
 
     const source = getSourceFromUrl() || `import { Component, run, reactive } from 'reactive-tsx/mono'
 
