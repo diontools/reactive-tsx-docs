@@ -29,7 +29,7 @@
     "normalize.css": "^8.0.1",
     "pako": "^1.0.11",
     "raw-loader": "^4.0.1",
-    "reactive-tsx": "0.0.42",
+    "reactive-tsx": "0.0.44",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.2",
     "webpack": "^4.44.1",
