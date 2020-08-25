@@ -27,7 +27,7 @@ body,
   color: #6060ff;
 }
 
-.github-button {
+.button {
   display: inline-block;
   border: 1px solid lightgray;
   background-color: white;
@@ -38,7 +38,7 @@ body,
   text-decoration: none;
 }
 
-.github-button:hover {
+.button:hover {
     background-color: lightgray;
     /* color: white; */
 }
@@ -67,8 +67,20 @@ main {
   height: 50%;
 }
 
-#result {
+#result-pane {
   height: 50%;
+  position: relative;
+}
+
+#result-tool {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#result {
+  height: 100%;
+  width: 100%;
   border: none;
   border-top: solid 1px lightgray;
 }

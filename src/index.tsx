@@ -13,19 +13,21 @@ const resultSourceDoc = reactive('')
 const App: Component = () => {
     let editor1Div: HTMLDivElement
     let editor2Div: HTMLDivElement
-    let resultFrame: HTMLIFrameElement
 
-    return <div id="container" onCreate={() => startApp(editor1Div, editor2Div, resultFrame)}>
+    return <div id="container" onCreate={() => startApp(editor1Div, editor2Div)}>
         <header>
             <div class="logo">&lt;R</div>
             <div class="title">reactive-tsx Playground</div>
-            <a class="github-button" href="https://github.com/diontools/reactive-tsx" target="_blank">GitHub</a>
+            <a class="button" href="https://github.com/diontools/reactive-tsx" target="_blank">GitHub</a>
         </header>
         <main>
             <div id="editor1" onCreate={e => editor1Div = e} />
             <div id="right-pane">
                 <div id="editor2" onCreate={e => editor2Div = e} />
-                <iframe id="result" onCreate={e => resultFrame = e} sandbox="allow-scripts" srcDoc={resultSourceDoc.value} />
+                <div id="result-pane">
+                    <a id="result-tool" class="button" href={'data:text/html,' + encodeURIComponent(resultSourceDoc.value)} target="_blank">open</a>
+                    <iframe id="result" sandbox="allow-scripts" srcDoc={resultSourceDoc.value} />
+                </div>
             </div>
         </main>
     </div>
@@ -33,7 +35,7 @@ const App: Component = () => {
 
 run(document.body, App, {})
 
-function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement, resultFrame: HTMLIFrameElement) {
+function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement) {
     //console.log(libs)
 
     const textDecoder = new TextDecoder()
@@ -182,7 +184,7 @@ run(document.body, App, {})
     const updateResult = () => {
         try {
             setSourceToUrl(model1.getValue())
-            
+
             const program = ts.createProgram([sourceFileName], {
                 strict: true,
                 target: ts.ScriptTarget.ES2015,
