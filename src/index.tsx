@@ -55,7 +55,7 @@ function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement) {
             const compressedString = atob(base64String)
             const compressedBytes = new Uint8Array(compressedString.length)
             for (let i = 0; i < compressedBytes.length; i++) compressedBytes[i] = compressedString.charCodeAt(i)
-            const jsonBytes = pako.inflate(compressedBytes)
+            const jsonBytes = pako.inflateRaw(compressedBytes)
             const json = textDecoder.decode(jsonBytes)
             const obj: unknown = JSON.parse(json)
             if (typeof obj === 'object' && obj !== null && typeof (obj as any).source === 'string') {
@@ -69,7 +69,7 @@ function startApp(editor1Div: HTMLDivElement, editor2Div: HTMLDivElement) {
         const json = JSON.stringify({ source })
         const jsonBytes = textEncoder.encode(json)
         const base64UrlString =
-            btoa(String.fromCharCode.apply(null, pako.deflate(jsonBytes) as any))
+            btoa(String.fromCharCode.apply(null, pako.deflateRaw(jsonBytes) as any))
                 .replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/m, '')
         currentHash = base64UrlString
         location.hash = base64UrlString
