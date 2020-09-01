@@ -1,4 +1,4 @@
-import { Component, run, reactive } from 'reactive-tsx'
+import { Component, run, reactive, version } from 'reactive-tsx'
 import * as pako from 'pako'
 import * as monaco from 'monaco-editor'
 import reactiveTsxTransformer from 'reactive-tsx/lib/transformer'
@@ -20,6 +20,8 @@ const App: Component = () => {
             <div class="logo">&lt;R</div>
             <div class="title">reactive-tsx Playground</div>
             <a class="button" href="https://github.com/diontools/reactive-tsx" target="_blank">GitHub</a>
+            <span class="version">v{version}</span>
+            <span class="version">TypeScript v{ts.version}</span>
         </header>
         <main>
             <div id="editor1" onCreate={e => editor1Div = e} />

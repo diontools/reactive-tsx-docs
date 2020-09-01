@@ -27,6 +27,12 @@ body,
   color: #6060ff;
 }
 
+.version {
+  margin-left: 0.5em;
+  color: gray;
+  font-size: 0.8em;
+}
+
 .button {
   display: inline-block;
   border: 1px solid lightgray;
