@@ -2,6 +2,7 @@ import { Component, run, reactive } from 'reactive-tsx'
 import * as pako from 'pako'
 import * as monaco from 'monaco-editor'
 import reactiveTsxTransformer from 'reactive-tsx/lib/transformer'
+import removeExportTransformer from 'reactive-tsx/lib/transformer-remove-export'
 import * as ts from 'typescript'
 import 'normalize.css'
 import './style.css'
@@ -195,7 +196,7 @@ run(document.body, App, {})
 
             const sourceFile = program.getSourceFile(sourceFileName)
             if (!sourceFile) throw 'sourceFile is undefined.'
-            const emitResult = program.emit(sourceFile, undefined, undefined, undefined, { before: [reactiveTsxTransformer(program, { host })] })
+            const emitResult = program.emit(sourceFile, undefined, undefined, undefined, { before: [reactiveTsxTransformer(program, { host })], after: [removeExportTransformer(program)] })
             const message = emitResult.diagnostics.map(d => d.messageText).join('\n')
 
             model2.setValue(message.length > 0 ? message : transpiledCode)
